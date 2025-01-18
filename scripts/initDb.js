@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Category = require('../models/category');
 const Product = require('../models/product');
+const Role = require('../models/role');
 
 // 连接数据库
 mongoose.connect('mongodb://127.0.0.1:27017/doumen', {
@@ -108,9 +109,28 @@ const initProducts = async () => {
   }
 };
 
+// 初始化管理员角色
+const initAdminRole = async () => {
+  try {
+    const adminRole = await Role.findOne({ name: 'admin' });
+    if (!adminRole) {
+      await Role.create({
+        name: 'admin',
+        description: '系统管理员',
+        permissions: ['*'],  // 所有权限
+        isSystem: true
+      });
+      console.log('管理员角色创建成功');
+    }
+  } catch (error) {
+    console.error('创建管理员角色失败:', error);
+  }
+};
+
 // 运行初始化
 const initDb = async () => {
   try {
+    await initAdminRole();
     await initAdmin();
     await initCategories();
     await initProducts();

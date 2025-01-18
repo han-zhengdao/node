@@ -47,13 +47,19 @@ const userController = {
       // 查找用户
       const user = await User.findOne({ username });
       if (!user) {
-        return res.status(401).json({ message: '用户名或密码错误' });
+        return res.status(401).json({
+          code: 401,
+          message: '用户名或密码错误'
+        });
       }
 
       // 验证密码
       const isMatch = await user.comparePassword(password);
       if (!isMatch) {
-        return res.status(401).json({ message: '用户名或密码错误' });
+        return res.status(401).json({
+          code: 401,
+          message: '用户名或密码错误'
+        });
       }
 
       // 生成 token
@@ -64,17 +70,25 @@ const userController = {
       );
 
       res.json({
+        code: 0,
         message: '登录成功',
-        token,
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-          role: user.role
+        data: {
+          token,
+          user: {
+            id: user._id,
+            username: user.username,
+            nickname: user.nickname || user.username,
+            avatar: user.avatar,
+            role: user.role
+          }
         }
       });
     } catch (error) {
-      res.status(500).json({ message: '服务器错误', error: error.message });
+      res.status(500).json({
+        code: 500,
+        message: '服务器错误',
+        error: error.message
+      });
     }
   },
 

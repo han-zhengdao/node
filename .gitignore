@@ -21,3 +21,7 @@ Thumbs.db
 .vscode/
 *.sublime-project
 *.sublime-workspace 
+
+# 上传文件
+uploads/*
+!uploads/.gitkeep 

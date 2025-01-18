@@ -26,6 +26,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB 连接成功'))
 .catch(err => console.error('MongoDB 连接失败:', err));
 
+// 添加静态文件服务
+app.use('/uploads', express.static('uploads'));
+
 // 路由
 try {
   app.use('/api/users', require('./routes/user'));
@@ -33,6 +36,8 @@ try {
   app.use('/api/categories', require('./routes/category'));
   app.use('/api/orders', require('./routes/order'));
   app.use('/api/wechat', require('./routes/wechatAuth'));
+  app.use('/api/upload', require('./routes/upload'));
+  app.use('/api/admin/system', require('./routes/system'));
 } catch (error) {
   console.error('路由加载错误:', error);
 }
